@@ -14,7 +14,7 @@ Este repositório contém a aplicação prática de um **CRUD (Create, Read, Upd
 
 ## 📸 Interface da Aplicação
 
-![Lista de Usuários](assets/img/preview.png)
+![Lista de Usuários](assets/img/preview.PNG)
 
 A interface é construída com **Bootstrap 5**, oferecendo uma tabela responsiva com botões de ação rápidos para **Visualizar**, **Editar** e **Excluir** registros, além da opção de **Adicionar usuário**.
 
