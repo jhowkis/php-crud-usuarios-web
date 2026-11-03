@@ -113,5 +113,5 @@ INSERT INTO usuarios (nome, email, data_nascimento, senha) VALUES
 
 ---
 
-👨‍🏫 **Docente:** Prof. Jônatas Ferreira  
+👨‍🏫 **Docente:** Prof. Jonatas Ferreira  
 📚 **Disciplina:** Programação Web
