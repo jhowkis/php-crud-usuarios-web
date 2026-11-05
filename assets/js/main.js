@@ -1,36 +1,22 @@
-/**
- * main.js - Scripts de Interatividade e Animações da Aula 0
- * Disciplina: Programação Web (PHP-WEB)
- * Docente: Prof. Jônatas Ferreira
- */
+/* ============================================================
+   CRUD de Usuários — interatividade JavaScript
+   Aula 0: apenas a confirmação antes de excluir.
+   Nas próximas aulas entram validação de formulário e Toast.
+   ============================================================ */
 
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 Aula 0: Script JS carregado com sucesso!');
+document.addEventListener("DOMContentLoaded", function () {
+    // Pega todos os botões "Excluir" da tabela
+    const botoesExcluir = document.querySelectorAll(".btn-excluir");
 
-    // 1. Inicialização de Tooltips do Bootstrap 5 (se aplicável)
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
+    botoesExcluir.forEach(function (botao) {
+        botao.addEventListener("click", function (evento) {
+            const nome = botao.dataset.nome;
+            const confirmou = confirm("Deseja realmente excluir o usuário " + nome + "?");
 
-    // 2. Animação simples de entrada no Card de Boas-Vindas
-    const cardElement = document.querySelector('.card');
-    if (cardElement) {
-        cardElement.style.opacity = '0';
-        cardElement.style.transform = 'translateY(15px)';
-        cardElement.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-        
-        setTimeout(() => {
-            cardElement.style.opacity = '1';
-            cardElement.style.transform = 'translateY(0)';
-        }, 100);
-    }
-
-    // 3. Verificação em tempo real da conexão local (Healthcheck simplificado)
-    const serverStatusBadge = document.querySelector('.badge');
-    if (serverStatusBadge) {
-        serverStatusBadge.addEventListener('click', () => {
-            alert('✅ Status: Servidor Apache e Interpretador PHP funcionando corretamente no XAMPP!');
+            // Se cancelou, impede que o link siga adiante
+            if (!confirmou) {
+                evento.preventDefault();
+            }
         });
-    }
+    });
 });

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CRUD de Usuários | Programação Web</title>
+
+    <!-- Bootstrap 5 + Bootstrap Icons + fonte Inter (via CDN) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Estilos da aplicação -->
+    <link href="assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ===== Barra de navegação ===== -->
+    <nav class="navbar navbar-expand navbar-dark navbar-crud py-3">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fs-4 d-flex align-items-center" href="index.html">
+                <i class="bi bi-people-fill me-2"></i>
+                CRUD
+                <span class="brand-divisor"></span>
+                <span class="brand-professor">Prof. Jonatas Ferreira</span>
+            </a>
+            <span class="navbar-text navbar-disciplina">
+                <i class="bi bi-code-slash me-1"></i> Programação Web
+            </span>
+        </div>
+    </nav>
+
+    <!-- ===== Conteúdo principal ===== -->
+    <main class="container-fluid px-4 py-5">
+        <div class="card card-crud">
+            <div class="card-body p-4">
+
+                <!-- Título + botão Adicionar -->
+                <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+                    <div>
+                        <h2 class="titulo-pagina fs-3 mb-1">
+                            <i class="bi bi-person-lines-fill me-1"></i> Lista de Usuários
+                        </h2>
+                        <p class="text-secondary mb-0">Gerencie os registros cadastrados na base de dados</p>
+                    </div>
+
+                    <!-- AULA 1: trocar href por "usuario-criar.php" -->
+                    <a href="#" class="btn btn-primary btn-adicionar">
+                        <i class="bi bi-person-plus-fill me-2"></i> Adicionar usuário
+                    </a>
+                </div>
+
+                <!-- Tabela de usuários -->
+                <div class="table-responsive">
+                    <table class="table align-middle tabela-usuarios mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-center" style="width: 90px;">ID</th>
+                                <th>Usuário</th>
+                                <th>E-mail</th>
+                                <th class="text-center">Data nasc.</th>
+                                <th class="text-end">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!--
+                                AULA 1: estas linhas fixas serão geradas pelo PHP:
+                                SELECT * FROM usuarios + laço foreach
+                            -->
+                            <tr>
+                                <td class="text-center col-id">#1</td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <span class="avatar-inicial">P</span>
+                                        <span class="nome-usuario">Pedro</span>
+                                    </div>
+                                </td>
+                                <td class="email-usuario text-secondary">
+                                    <i class="bi bi-envelope"></i>contato@canalti.com.br
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge badge-data">
+                                        <i class="bi bi-calendar3"></i>01/05/2000
+                                    </span>
+                                </td>
+                                <td class="text-end text-nowrap">
+                                    <a href="#" class="btn btn-outline-secondary btn-acao" title="Visualizar">
+                                        <i class="bi bi-eye-fill"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-outline-primary btn-acao" title="Editar">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-outline-danger btn-acao btn-excluir" data-nome="Pedro" title="Excluir">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </a>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text-center col-id">#2</td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <span class="avatar-inicial">J</span>
+                                        <span class="nome-usuario">João</span>
+                                    </div>
+                                </td>
+                                <td class="email-usuario text-secondary">
+                                    <i class="bi bi-envelope"></i>contato2@canalti.com.br
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge badge-data">
+                                        <i class="bi bi-calendar3"></i>01/05/2001
+                                    </span>
+                                </td>
+                                <td class="text-end text-nowrap">
+                                    <a href="#" class="btn btn-outline-secondary btn-acao" title="Visualizar">
+                                        <i class="bi bi-eye-fill"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-outline-primary btn-acao" title="Editar">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-outline-danger btn-acao btn-excluir" data-nome="João" title="Excluir">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Bootstrap JS + JS da aplicação -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
