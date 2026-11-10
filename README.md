@@ -158,7 +158,7 @@ O percentual indica **quanto do arquivo final** já está pronto ao término de 
 | **Progresso geral** | **≈ 38%** | **≈ 66%** | **≈ 77%** | **100%** |
 
 > A Aula 4 é dedicada às apresentações dos grupos e não altera o projeto.
-> O `$_SESSION` aparece na Aula 3 para as mensagens de feedback (sucesso/erro). Login e carrinho ficam para o projeto final (Mini Loja).
+> O `$_SESSION` aparece na Aula 3 para as mensagens de feedback (sucesso/erro).
 
 ---
 
