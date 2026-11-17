@@ -1,13 +1,32 @@
 <?php
 // Aula 1: mensagem de feedback enviada por acoes.php via URL (GET): index.php?msg=criado
 // Só aceitamos chaves conhecidas; nunca imprima direto o que vem da URL.
+
+//Aula 2: os dados agora vêm do banco (SELECT + foreach).
+require 'config/conexao.php';
+
+// 1) Consulta. Não há valor vindo do usuário, então query() é suficiente.
+//    Não buscamos a coluna "senha": só pegamos o que a tela precisa.
+$stmt     = $pdo->query('SELECT id, nome, email, data_nascimento FROM usuarios ORDER BY id');
+$usuarios = $stmt->fetchAll();   // array de arrays: uma posição por linha da tabela
+
+
 $mensagens = [
     'criado' => 'Usuário cadastrado com sucesso!',
+    'excluido' => 'Usuário excluído com sucesso!',
 ];
 $msg = $_GET['msg'] ?? '';
+
+//teste Aula 02
+//echo '<pre>';
+//print_r($usuarios);
+//exit;
+
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,8 +40,21 @@ $msg = $_GET['msg'] ?? '';
     <!-- Estilos da aplicação -->
     <link href="assets/css/style.css" rel="stylesheet">
 </head>
-<body>
 
+<body>
+    <!-- ===== Toast de feedback (aparece só quando há ?msg=... conhecido) ===== -->
+    <?php if (isset($mensagens[$msg])): ?>
+        <div class="toast-container position-fixed top-0 end-0 p-3">
+            <div id="toast-feedback" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="bi bi-check-circle-fill me-2"></i><?= htmlspecialchars($mensagens[$msg]) ?>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
     <!-- ===== Barra de navegação ===== -->
     <nav class="navbar navbar-expand navbar-dark navbar-crud py-3">
         <div class="container-fluid px-4">
@@ -57,13 +89,7 @@ $msg = $_GET['msg'] ?? '';
                     </a>
                 </div>
 
-                <?php if (isset($mensagens[$msg])): ?>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <i class="bi bi-check-circle-fill me-1"></i>
-                        <?= htmlspecialchars($mensagens[$msg]) ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
-                    </div>
-                <?php endif; ?>
+
 
                 <!-- Tabela de usuários -->
                 <div class="table-responsive">
@@ -78,68 +104,52 @@ $msg = $_GET['msg'] ?? '';
                             </tr>
                         </thead>
                         <tbody>
-                            <!--
-                                AULA 2: estas linhas fixas serão geradas pelo PHP:
-                                SELECT * FROM usuarios + laço foreach
-                                (por enquanto, confira os novos cadastros no phpMyAdmin)
-                            -->
-                            <tr>
-                                <td class="text-center col-id">#1</td>
-                                <td>
-                                    <div class="d-flex align-items-center gap-3">
-                                        <span class="avatar-inicial">P</span>
-                                        <span class="nome-usuario">Pedro</span>
-                                    </div>
-                                </td>
-                                <td class="email-usuario text-secondary">
-                                    <i class="bi bi-envelope"></i>contato@canalti.com.br
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge badge-data">
-                                        <i class="bi bi-calendar3"></i>01/05/2000
-                                    </span>
-                                </td>
-                                <td class="text-end text-nowrap">
-                                    <a href="#" class="btn btn-outline-secondary btn-acao" title="Visualizar">
-                                        <i class="bi bi-eye-fill"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-outline-primary btn-acao" title="Editar">
-                                        <i class="bi bi-pencil-fill"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-outline-danger btn-acao btn-excluir" data-nome="Pedro" title="Excluir">
-                                        <i class="bi bi-trash-fill"></i>
-                                    </a>
-                                </td>
-                            </tr>
 
-                            <tr>
-                                <td class="text-center col-id">#2</td>
-                                <td>
-                                    <div class="d-flex align-items-center gap-3">
-                                        <span class="avatar-inicial">J</span>
-                                        <span class="nome-usuario">João</span>
-                                    </div>
-                                </td>
-                                <td class="email-usuario text-secondary">
-                                    <i class="bi bi-envelope"></i>contato2@canalti.com.br
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge badge-data">
-                                        <i class="bi bi-calendar3"></i>01/05/2001
-                                    </span>
-                                </td>
-                                <td class="text-end text-nowrap">
-                                    <a href="#" class="btn btn-outline-secondary btn-acao" title="Visualizar">
-                                        <i class="bi bi-eye-fill"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-outline-primary btn-acao" title="Editar">
-                                        <i class="bi bi-pencil-fill"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-outline-danger btn-acao btn-excluir" data-nome="João" title="Excluir">
-                                        <i class="bi bi-trash-fill"></i>
-                                    </a>
-                                </td>
-                            </tr>
+                            <?php if (count($usuarios) === 0): ?>
+                                <tr>
+                                    <td colspan="5" class="text-center text-secondary py-5">
+                                        <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+                                        Nenhum usuário cadastrado.
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                            <?php foreach ($usuarios as $u): ?>
+                                <tr>
+                                    <td class="text-center col-id">#<?= (int) $u['id'] ?></td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <span class="avatar-inicial"><?= htmlspecialchars(mb_strtoupper(mb_substr($u['nome'], 0, 1))) ?></span>
+                                            <span class="nome-usuario"><?= htmlspecialchars($u['nome']) ?></span>
+                                        </div>
+                                    </td>
+                                    <td class="email-usuario text-secondary">
+                                        <i class="bi bi-envelope"></i><?= htmlspecialchars($u['email']) ?>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge badge-data">
+                                            <i class="bi bi-calendar3"></i><?= (new DateTime($u['data_nascimento']))->format('d/m/Y') ?>
+                                        </span>
+                                    </td>
+                                    <td class="text-end text-nowrap">
+                                        <!-- AULA 3: href="usuario-view.php?id=..." -->
+                                        <a href="#" class="btn btn-outline-secondary btn-acao" title="Visualizar">
+                                            <i class="bi bi-eye-fill"></i>
+                                        </a>
+                                        <!-- AULA 3: href="usuario-editar.php?id=..." -->
+                                        <a href="#" class="btn btn-outline-primary btn-acao" title="Editar">
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </a>
+                                        <!-- Excluir: o id viaja pela URL (GET / query string) -->
+                                        <a href="acoes.php?acao=excluir&amp;id=<?= (int) $u['id'] ?>"
+                                            class="btn btn-outline-danger btn-acao btn-excluir"
+                                            data-nome="<?= htmlspecialchars($u['nome']) ?>" title="Excluir">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+
+
                         </tbody>
                     </table>
                 </div>
@@ -148,8 +158,10 @@ $msg = $_GET['msg'] ?? '';
         </div>
     </main>
 
+
     <!-- Bootstrap JS + JS da aplicação -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/main.js"></script>
 </body>
+
 </html>

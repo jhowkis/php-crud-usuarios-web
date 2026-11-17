@@ -2,62 +2,75 @@
    CRUD de Usuários — interatividade JavaScript
    Aula 0: confirmação antes de excluir.
    Aula 1: validação do formulário antes de enviar ao PHP.
-   Aula 2: Toast de feedback (a implementar).
+   Aula 2: Toast de feedback
    ============================================================ */
 
 document.addEventListener("DOMContentLoaded", function () {
+  /* ---------- Confirmação ao excluir (Aula 0) ---------- */
+  const botoesExcluir = document.querySelectorAll(".btn-excluir");
 
-    /* ---------- Confirmação ao excluir (Aula 0) ---------- */
-    const botoesExcluir = document.querySelectorAll(".btn-excluir");
+  botoesExcluir.forEach(function (botao) {
+    botao.addEventListener("click", function (evento) {
+      const nome = botao.dataset.nome;
+      const confirmou = confirm(
+        "Deseja realmente excluir o usuário " + nome + "?",
+      );
 
-    botoesExcluir.forEach(function (botao) {
-        botao.addEventListener("click", function (evento) {
-            const nome = botao.dataset.nome;
-            const confirmou = confirm("Deseja realmente excluir o usuário " + nome + "?");
-
-            // Se cancelou, impede que o link siga adiante
-            if (!confirmou) {
-                evento.preventDefault();
-            }
-        });
+      // Se cancelou, impede que o link siga adiante
+      if (!confirmou) {
+        evento.preventDefault();
+      }
     });
+  });
+  /* ---------- Toast de feedback (Aula 2) ---------- */
+  // O PHP só escreve o #toast-feedback quando existe um ?msg=... conhecido.
+  const toastEl = document.getElementById("toast-feedback");
 
-    /* ---------- Validação do formulário (Aula 1) ---------- */
-    const formulario = document.getElementById("form-usuario");
+  if (toastEl) {
+    new bootstrap.Toast(toastEl, { delay: 4000 }).show();
 
-    if (formulario) {
-        formulario.addEventListener("submit", function (evento) {
-            const nome = document.getElementById("nome").value.trim();
-            const email = document.getElementById("email").value.trim();
-            const nascimento = document.getElementById("data_nascimento").value;
-            const senha = document.getElementById("senha").value;
+    // Remove o ?msg=... da barra de endereços: ao atualizar (F5) o aviso não repete
+    const url = new URL(window.location.href);
+    url.searchParams.delete("msg");
+    window.history.replaceState({}, "", url);
+  }
+  /* ---------- Validação do formulário (Aula 1) ---------- */
+  const formulario = document.getElementById("form-usuario");
 
-            // Expressão regular simples para e-mail: texto@texto.texto
-            const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (formulario) {
+    formulario.addEventListener("submit", function (evento) {
+      const nome = document.getElementById("nome").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const nascimento = document.getElementById("data_nascimento").value;
+      const senha = document.getElementById("senha").value;
 
-            let mensagem = "";
-            let campoComErro = null;
+      // Expressão regular simples para e-mail: texto@texto.texto
+      const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-            if (nome.length < 3) {
-                mensagem = "Informe um nome com pelo menos 3 caracteres.";
-                campoComErro = "nome";
-            } else if (!regexEmail.test(email)) {
-                mensagem = "Informe um e-mail válido.";
-                campoComErro = "email";
-            } else if (nascimento === "" || new Date(nascimento) > new Date()) {
-                mensagem = "Informe uma data de nascimento válida (não pode ser futura).";
-                campoComErro = "data_nascimento";
-            } else if (senha.length < 6) {
-                mensagem = "A senha deve ter pelo menos 6 caracteres.";
-                campoComErro = "senha";
-            }
+      let mensagem = "";
+      let campoComErro = null;
 
-            // Se houve erro: bloqueia o envio, avisa e devolve o foco ao campo
-            if (mensagem !== "") {
-                evento.preventDefault();   // impede o navegador de enviar o formulário
-                alert(mensagem);           // caixa de alerta (window.alert)
-                document.getElementById(campoComErro).focus();
-            }
-        });
-    }
+      if (nome.length < 3) {
+        mensagem = "Informe um nome com pelo menos 3 caracteres.";
+        campoComErro = "nome";
+      } else if (!regexEmail.test(email)) {
+        mensagem = "Informe um e-mail válido.";
+        campoComErro = "email";
+      } else if (nascimento === "" || new Date(nascimento) > new Date()) {
+        mensagem =
+          "Informe uma data de nascimento válida (não pode ser futura).";
+        campoComErro = "data_nascimento";
+      } else if (senha.length < 6) {
+        mensagem = "A senha deve ter pelo menos 6 caracteres.";
+        campoComErro = "senha";
+      }
+
+      // Se houve erro: bloqueia o envio, avisa e devolve o foco ao campo
+      if (mensagem !== "") {
+        evento.preventDefault(); // impede o navegador de enviar o formulário
+        alert(mensagem); // caixa de alerta (window.alert)
+        document.getElementById(campoComErro).focus();
+      }
+    });
+  }
 });

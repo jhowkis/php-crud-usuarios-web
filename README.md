@@ -10,7 +10,7 @@
 
 Este repositório contém a aplicação prática de um **CRUD (Create, Read, Update, Delete)** para gerenciamento de usuários. O projeto serve como base didática para as aulas da disciplina de **Programação Web**, ministrada pelo **Prof. Jonatas Ferreira**.
 
-> 📍 **Você está na Aula 1 (HTTP, PDO & Create):** o projeto já conecta ao MySQL e **cadastra usuários** (Create). A listagem ainda usa linhas fixas e passa a ser dinâmica na Aula 2.
+> 📍 **Você está na Aula 2 (Read & Delete):** o projeto já **cadastra** (Create), **lista** os usuários direto do banco (Read) e **exclui** registros (Delete). O Update chega na Aula 3.
 
 ---
 
@@ -33,7 +33,7 @@ A interface é construída com **Bootstrap 5**, oferecendo uma tabela responsiva
 
 ## 📂 Estrutura de Pastas
 
-Estrutura **atual (Aula 1)**:
+Estrutura **atual (Aula 2)**:
 
 ```text
 crud-usuarios/
@@ -41,16 +41,16 @@ crud-usuarios/
 │   ├── css/
 │   │   └── style.css          # Estilos personalizados da aplicação
 │   ├── js/
-│   │   └── main.js            # JS: confirmação ao excluir e validação do formulário
+│   │   └── main.js            # JS: confirmação ao excluir, validação e Toast
 │   └── img/
 │       └── preview.png        # Imagem de demonstração da interface
 ├── config/
 │   └── conexao.php            # Conexão PDO com o banco de dados
 ├── db/
 │   └── schema.sql             # Script SQL de criação do banco e tabela
-├── index.php                  # Tela principal (linhas fixas até a Aula 2)
+├── index.php                  # Lista de Usuários (SELECT + foreach)
 ├── usuario-criar.php          # Formulário de Cadastro (Create)
-├── acoes.php                  # Processamento das ações (INSERT)
+├── acoes.php                  # Processamento das ações (INSERT e DELETE)
 └── README.md                  # Documentação do projeto
 ```
 
@@ -158,16 +158,16 @@ O percentual indica **quanto do arquivo final** já está pronto ao término de 
 | **Progresso geral** | **≈ 38%** | **≈ 66%** | **≈ 77%** | **100%** |
 
 > A Aula 4 é dedicada às apresentações dos grupos e não altera o projeto.
-> O `$_SESSION` aparece na Aula 3 para as mensagens de feedback (sucesso/erro).
+> O `$_SESSION` aparece na Aula 3 para as mensagens de feedback (sucesso/erro). Login e carrinho ficam para o projeto final (Mini Loja).
 
 ---
 
 ## 📌 Funcionalidades do CRUD (objetivo final)
 
 - [x] **Create (`C`):** Formulário de cadastro com validação via JavaScript e criptografia de senha (`password_hash`).
-- [ ] **Read (`R`):** Exibição dinâmica dos dados em tabela estilizada, com data no padrão `dd/mm/aaaa`.
+- [x] **Read (`R`):** Exibição dinâmica dos dados em tabela estilizada, com data no padrão `dd/mm/aaaa`.
 - [ ] **Update (`U`):** Busca do registro via `GET`, preenchimento do formulário e atualização via `POST`.
-- [ ] **Delete (`D`):** Remoção via PDO com confirmação prévia em JavaScript.
+- [x] **Delete (`D`):** Remoção via PDO com confirmação prévia em JavaScript.
 
 ---
 
