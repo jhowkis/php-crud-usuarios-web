@@ -154,5 +154,5 @@ O percentual indica **quanto do arquivo final** já está pronto ao término de 
 
 ---
 
-👨‍🏫 **Docente:** Prof. Jônatas Ferreira
+👨‍🏫 **Docente:** Prof. Jonatas Ferreira
 📚 **Disciplina:** Programação Web
