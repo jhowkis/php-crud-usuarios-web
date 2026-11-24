@@ -1,17 +1,32 @@
 <?php
-// Aula 1: mensagem de feedback enviada por acoes.php via URL (GET): index.php?msg=criado
-// Só aceitamos chaves conhecidas; nunca imprima direto o que vem da URL.
+require 'config/conexao.php';
+$stmt     = $pdo->query('SELECT id, nome, email, data_nascimento FROM usuarios ORDER BY id');
+$usuarios = $stmt->fetchAll();   // array de arrays
 $mensagens = [
-    'criado' => 'Usuário cadastrado com sucesso!',
+    'criado'   => 'Usuário cadastrado com sucesso!',
+    'excluido' => 'Usuário excluído com sucesso!',
 ];
 $msg = $_GET['msg'] ?? '';
+//teste Aula 02 - Teste temporário (apague depois)
+//echo '<pre>';
+//print_r($usuarios);
+//exit;
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CRUD de Usuários | Programação Web</title>
+
+    <!-- Favicons e Manifest -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon_io/favicon-16x16.png">
+    <link rel="shortcut icon" href="assets/img/favicon_io/favicon.ico" type="image/x-icon">
+    <link rel="manifest" href="assets/img/favicon_io/site.webmanifest">
 
     <!-- Bootstrap 5 + Bootstrap Icons + fonte Inter (via CDN) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -21,12 +36,13 @@ $msg = $_GET['msg'] ?? '';
     <!-- Estilos da aplicação -->
     <link href="assets/css/style.css" rel="stylesheet">
 </head>
+
 <body>
 
     <!-- ===== Barra de navegação ===== -->
     <nav class="navbar navbar-expand navbar-dark navbar-crud py-3">
         <div class="container-fluid px-4">
-            <a class="navbar-brand fs-4 d-flex align-items-center" href="index.php">
+            <a class="navbar-brand fs-4 d-flex align-items-center" href="index.html">
                 <i class="bi bi-people-fill me-2"></i>
                 CRUD
                 <span class="brand-divisor"></span>
@@ -52,19 +68,15 @@ $msg = $_GET['msg'] ?? '';
                         <p class="text-secondary mb-0">Gerencie os registros cadastrados na base de dados</p>
                     </div>
 
+                    <!-- AULA 1: trocar href por "usuario-criar.php" -->
                     <a href="usuario-criar.php" class="btn btn-primary btn-adicionar">
                         <i class="bi bi-person-plus-fill me-2"></i> Adicionar usuário
                     </a>
                 </div>
-
+                <!-- ...dentro do card, antes da tabela... -->
                 <?php if (isset($mensagens[$msg])): ?>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <i class="bi bi-check-circle-fill me-1"></i>
-                        <?= htmlspecialchars($mensagens[$msg]) ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
-                    </div>
+                    <div class="alert alert-success"><?= htmlspecialchars($mensagens[$msg]) ?></div>
                 <?php endif; ?>
-
                 <!-- Tabela de usuários -->
                 <div class="table-responsive">
                     <table class="table align-middle tabela-usuarios mb-0">
@@ -78,68 +90,35 @@ $msg = $_GET['msg'] ?? '';
                             </tr>
                         </thead>
                         <tbody>
-                            <!--
-                                AULA 2: estas linhas fixas serão geradas pelo PHP:
-                                SELECT * FROM usuarios + laço foreach
-                                (por enquanto, confira os novos cadastros no phpMyAdmin)
-                            -->
-                            <tr>
-                                <td class="text-center col-id">#1</td>
-                                <td>
-                                    <div class="d-flex align-items-center gap-3">
-                                        <span class="avatar-inicial">P</span>
-                                        <span class="nome-usuario">Pedro</span>
-                                    </div>
-                                </td>
-                                <td class="email-usuario text-secondary">
-                                    <i class="bi bi-envelope"></i>contato@canalti.com.br
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge badge-data">
-                                        <i class="bi bi-calendar3"></i>01/05/2000
-                                    </span>
-                                </td>
-                                <td class="text-end text-nowrap">
-                                    <a href="#" class="btn btn-outline-secondary btn-acao" title="Visualizar">
-                                        <i class="bi bi-eye-fill"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-outline-primary btn-acao" title="Editar">
-                                        <i class="bi bi-pencil-fill"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-outline-danger btn-acao btn-excluir" data-nome="Pedro" title="Excluir">
-                                        <i class="bi bi-trash-fill"></i>
-                                    </a>
-                                </td>
-                            </tr>
+                            <?php if (count($usuarios) === 0): ?>
+                                <tr>
+                                    <td colspan="5" class="text-center text-secondary py-5">
+                                        <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+                                        Nenhum usuário cadastrado.
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                            <?php foreach ($usuarios as $u): ?>
+                                <tr>
+                                    <td class="text-center col-id">#<?= (int) $u['id'] ?></td>
+                                    <td><?= $u['nome'] ?></td>
+                                    <td><?= $u['email'] ?></td>
+                                    <td><?= $u['data_nascimento'] ?></td>
+                                    <td class="text-end text-nowrap">
+                                        <a href="#" class="btn btn-outline-secondary btn-acao" title="Visualizar">
+                                            <i class="bi bi-eye-fill"></i>
+                                        </a>
 
-                            <tr>
-                                <td class="text-center col-id">#2</td>
-                                <td>
-                                    <div class="d-flex align-items-center gap-3">
-                                        <span class="avatar-inicial">J</span>
-                                        <span class="nome-usuario">João</span>
-                                    </div>
-                                </td>
-                                <td class="email-usuario text-secondary">
-                                    <i class="bi bi-envelope"></i>contato2@canalti.com.br
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge badge-data">
-                                        <i class="bi bi-calendar3"></i>01/05/2001
-                                    </span>
-                                </td>
-                                <td class="text-end text-nowrap">
-                                    <a href="#" class="btn btn-outline-secondary btn-acao" title="Visualizar">
-                                        <i class="bi bi-eye-fill"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-outline-primary btn-acao" title="Editar">
-                                        <i class="bi bi-pencil-fill"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-outline-danger btn-acao btn-excluir" data-nome="João" title="Excluir">
-                                        <i class="bi bi-trash-fill"></i>
-                                    </a>
-                                </td>
-                            </tr>
+                                        <a href="#" class="btn btn-outline-primary btn-acao" title="Editar">
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </a>
+
+                                        <a href="#" class="btn btn-outline-danger btn-acao btn-excluir" data-nome=<?= $u['nome'] ?> title="Excluir">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
@@ -152,4 +131,5 @@ $msg = $_GET['msg'] ?? '';
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/main.js"></script>
 </body>
+
 </html>
