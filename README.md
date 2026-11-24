@@ -10,13 +10,13 @@
 
 Este repositório contém a aplicação prática de um **CRUD (Create, Read, Update, Delete)** para gerenciamento de usuários. O projeto serve como base didática para as aulas da disciplina de **Programação Web**, ministrada pelo **Prof. Jonatas Ferreira**.
 
-> 📍 **Você está na Aula 2 (Read & Delete):** o projeto já **cadastra** (Create), **lista** os usuários direto do banco (Read) e **exclui** registros (Delete). O Update chega na Aula 3.
+> 📍 **Você está na Aula 3 (Update & Sessões):** o **CRUD está completo**: cadastra (Create), lista (Read), edita e visualiza (Update) e exclui (Delete), com mensagens de feedback guardadas na sessão (`$_SESSION`).
 
 ---
 
 ## 📸 Interface da Aplicação
 
-![Lista de Usuários](assets/img/preview.PNG)
+![Lista de Usuários](assets/img/preview.png)
 
 A interface é construída com **Bootstrap 5**, oferecendo uma tabela responsiva com botões de ação rápidos para **Visualizar**, **Editar** e **Excluir** registros, além da opção de **Adicionar usuário**.
 
@@ -33,42 +33,25 @@ A interface é construída com **Bootstrap 5**, oferecendo uma tabela responsiva
 
 ## 📂 Estrutura de Pastas
 
-Estrutura **atual (Aula 2)**:
-
 ```text
 crud-usuarios/
 ├── assets/
 │   ├── css/
 │   │   └── style.css          # Estilos personalizados da aplicação
 │   ├── js/
-│   │   └── main.js            # JS: confirmação ao excluir, validação e Toast
+│   │   └── main.js            # JS: confirmação ao excluir, Toast e validação do formulário
 │   └── img/
 │       └── preview.png        # Imagem de demonstração da interface
 ├── config/
 │   └── conexao.php            # Conexão PDO com o banco de dados
 ├── db/
 │   └── schema.sql             # Script SQL de criação do banco e tabela
-├── index.php                  # Lista de Usuários (SELECT + foreach)
-├── usuario-criar.php          # Formulário de Cadastro (Create)
-├── acoes.php                  # Processamento das ações (INSERT e DELETE)
-└── README.md                  # Documentação do projeto
-```
-
-Estrutura **final do projeto** (ao fim da Aula 3):
-
-```text
-crud-usuarios/
-├── assets/ ...
-├── config/
-│   └── conexao.php            # Conexão PDO com o banco de dados
-├── db/
-│   └── schema.sql
 ├── index.php                  # Lista de Usuários (Read)
 ├── usuario-criar.php          # Formulário de Cadastro (Create)
 ├── usuario-editar.php         # Formulário de Edição (Update)
 ├── usuario-view.php           # Visualização detalhada do usuário
-├── acoes.php                  # Processamento das ações (POST/GET)
-└── README.md
+├── acoes.php                  # Processamento das ações: criar, atualizar e excluir
+└── README.md                  # Documentação do projeto
 ```
 
 ---
@@ -166,7 +149,7 @@ O percentual indica **quanto do arquivo final** já está pronto ao término de 
 
 - [x] **Create (`C`):** Formulário de cadastro com validação via JavaScript e criptografia de senha (`password_hash`).
 - [x] **Read (`R`):** Exibição dinâmica dos dados em tabela estilizada, com data no padrão `dd/mm/aaaa`.
-- [ ] **Update (`U`):** Busca do registro via `GET`, preenchimento do formulário e atualização via `POST`.
+- [x] **Update (`U`):** Busca do registro via `GET`, preenchimento do formulário e atualização via `POST`.
 - [x] **Delete (`D`):** Remoção via PDO com confirmação prévia em JavaScript.
 
 ---

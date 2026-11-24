@@ -1,8 +1,11 @@
 <?php
-// Aula 1: mensagem de feedback enviada por acoes.php via URL (GET): index.php?msg=criado
-// Só aceitamos chaves conhecidas; nunca imprima direto o que vem da URL.
+/* ============================================================
+   index.php — Lista de Usuários (Read)
+   Aula 2: os dados agora vêm do banco (SELECT + foreach).
+   Aula 3: links Visualizar/Editar e mensagens flash via $_SESSION.
+   ============================================================ */
 
-//Aula 2: os dados agora vêm do banco (SELECT + foreach).
+session_start();   // sempre ANTES de qualquer saída
 require 'config/conexao.php';
 
 // 1) Consulta. Não há valor vindo do usuário, então query() é suficiente.
@@ -10,23 +13,13 @@ require 'config/conexao.php';
 $stmt     = $pdo->query('SELECT id, nome, email, data_nascimento FROM usuarios ORDER BY id');
 $usuarios = $stmt->fetchAll();   // array de arrays: uma posição por linha da tabela
 
-
-$mensagens = [
-    'criado' => 'Usuário cadastrado com sucesso!',
-    'excluido' => 'Usuário excluído com sucesso!',
-];
-$msg = $_GET['msg'] ?? '';
-
-//teste Aula 02
-//echo '<pre>';
-//print_r($usuarios);
-//exit;
-
+// 2) Mensagem flash: guardada na sessão pelo acoes.php, lida UMA vez e descartada.
+//    Diferente do ?msg=... da Aula 2, ela não aparece na URL e não pode ser forjada.
+$flash = $_SESSION['flash'] ?? null;
+unset($_SESSION['flash']);
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -40,21 +33,8 @@ $msg = $_GET['msg'] ?? '';
     <!-- Estilos da aplicação -->
     <link href="assets/css/style.css" rel="stylesheet">
 </head>
-
 <body>
-    <!-- ===== Toast de feedback (aparece só quando há ?msg=... conhecido) ===== -->
-    <?php if (isset($mensagens[$msg])): ?>
-        <div class="toast-container position-fixed top-0 end-0 p-3">
-            <div id="toast-feedback" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        <i class="bi bi-check-circle-fill me-2"></i><?= htmlspecialchars($mensagens[$msg]) ?>
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
-                </div>
-            </div>
-        </div>
-    <?php endif; ?>
+
     <!-- ===== Barra de navegação ===== -->
     <nav class="navbar navbar-expand navbar-dark navbar-crud py-3">
         <div class="container-fluid px-4">
@@ -89,8 +69,6 @@ $msg = $_GET['msg'] ?? '';
                     </a>
                 </div>
 
-
-
                 <!-- Tabela de usuários -->
                 <div class="table-responsive">
                     <table class="table align-middle tabela-usuarios mb-0">
@@ -113,6 +91,8 @@ $msg = $_GET['msg'] ?? '';
                                     </td>
                                 </tr>
                             <?php endif; ?>
+
+                            <!-- Uma <tr> para cada linha devolvida pelo SELECT -->
                             <?php foreach ($usuarios as $u): ?>
                                 <tr>
                                     <td class="text-center col-id">#<?= (int) $u['id'] ?></td>
@@ -131,24 +111,21 @@ $msg = $_GET['msg'] ?? '';
                                         </span>
                                     </td>
                                     <td class="text-end text-nowrap">
-                                        <!-- AULA 3: href="usuario-view.php?id=..." -->
-                                        <a href="#" class="btn btn-outline-secondary btn-acao" title="Visualizar">
+                                        <a href="usuario-view.php?id=<?= (int) $u['id'] ?>" class="btn btn-outline-secondary btn-acao" title="Visualizar">
                                             <i class="bi bi-eye-fill"></i>
                                         </a>
-                                        <!-- AULA 3: href="usuario-editar.php?id=..." -->
-                                        <a href="#" class="btn btn-outline-primary btn-acao" title="Editar">
+                                        <a href="usuario-editar.php?id=<?= (int) $u['id'] ?>" class="btn btn-outline-primary btn-acao" title="Editar">
                                             <i class="bi bi-pencil-fill"></i>
                                         </a>
                                         <!-- Excluir: o id viaja pela URL (GET / query string) -->
                                         <a href="acoes.php?acao=excluir&amp;id=<?= (int) $u['id'] ?>"
-                                            class="btn btn-outline-danger btn-acao btn-excluir"
-                                            data-nome="<?= htmlspecialchars($u['nome']) ?>" title="Excluir">
+                                           class="btn btn-outline-danger btn-acao btn-excluir"
+                                           data-nome="<?= htmlspecialchars($u['nome']) ?>" title="Excluir">
                                             <i class="bi bi-trash-fill"></i>
                                         </a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
-
 
                         </tbody>
                     </table>
@@ -158,10 +135,22 @@ $msg = $_GET['msg'] ?? '';
         </div>
     </main>
 
+    <!-- ===== Toast de feedback (aparece só quando há uma mensagem flash na sessão) ===== -->
+    <?php if ($flash): ?>
+        <div class="toast-container position-fixed top-0 end-0 p-3">
+            <div id="toast-feedback" class="toast align-items-center text-bg-<?= htmlspecialchars($flash['tipo']) ?> border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="bi <?= $flash['tipo'] === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill' ?> me-2"></i><?= htmlspecialchars($flash['texto']) ?>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
 
     <!-- Bootstrap JS + JS da aplicação -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/main.js"></script>
 </body>
-
 </html>

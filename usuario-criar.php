@@ -1,11 +1,9 @@
 <?php
-// Mensagens de erro enviadas por acoes.php via URL (GET): usuario-criar.php?erro=email
-$erros = [
-    'campos' => 'Preencha todos os campos corretamente.',
-    'email'  => 'Este e-mail já está cadastrado.',
-    'banco'  => 'Não foi possível salvar. Tente novamente.',
-];
-$erro = $_GET['erro'] ?? '';
+session_start();
+
+// Mensagem flash (ex.: erro de validação enviado pelo acoes.php): lida uma vez e descartada
+$flash = $_SESSION['flash'] ?? null;
+unset($_SESSION['flash']);
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -44,10 +42,10 @@ $erro = $_GET['erro'] ?? '';
                 </h2>
                 <p class="text-secondary mb-4">Preencha os dados para cadastrar um novo usuário</p>
 
-                <?php if (isset($erros[$erro])): ?>
-                    <div class="alert alert-danger" role="alert">
+                <?php if ($flash): ?>
+                    <div class="alert alert-<?= htmlspecialchars($flash['tipo']) ?>" role="alert">
                         <i class="bi bi-exclamation-triangle-fill me-1"></i>
-                        <?= htmlspecialchars($erros[$erro]) ?>
+                        <?= htmlspecialchars($flash['texto']) ?>
                     </div>
                 <?php endif; ?>
 
